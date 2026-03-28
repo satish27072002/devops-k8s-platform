@@ -18,6 +18,6 @@ spec:
       - name: hello-app
         image: hashicorp/http-echo
         args:
-        - "-text=Hello from Kubernetes! Deployed via GitOps!"
+        - "-text=GitOps is working! Changed from Git, deployed automatically!"
         ports:
         - containerPort: 5678
