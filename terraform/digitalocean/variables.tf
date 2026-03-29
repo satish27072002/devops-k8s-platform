@@ -19,7 +19,7 @@ variable "region" {
 variable "kubernetes_version" {
   description = "Kubernetes version for the cluster"
   type        = string
-  default     = "1.31.1-do.4"
+  default     = "1.35.1-do.1"
 }
 
 variable "node_size" {
