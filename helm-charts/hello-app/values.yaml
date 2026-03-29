@@ -1,0 +1,13 @@
+replicaCount: 2
+
+image:
+  repository: hashicorp/http-echo
+  tag: latest
+
+message: "Hello from Helm chart! Deployed via GitOps!"
+
+service:
+  type: ClusterIP
+  port: 80
+
+containerPort: 5678
