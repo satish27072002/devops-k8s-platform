@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: docs
-          image: satish27072002/multi-agent-sdlc-docs:latest
+          image: satish27072002/multi-agent-sdlc-docs:amd64-20260331191725
           ports:
             - containerPort: 9004
           env:
