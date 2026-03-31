@@ -57,7 +57,8 @@ Developer pushes code
 devops-k8s-platform/
 ├── kubernetes/
 │   ├── apps/
-│   │   └── hello-app/              # Sample app (deployment + service)
+│   │   ├── hello-app/              # Sample app (deployment + service)
+│   │   └── multi-agent/            # Multi-Agent SDLC app manifests
 │   ├── argocd/
 │   │   └── applications/           # ArgoCD application definitions
 │   └── monitoring/

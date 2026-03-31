@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-agent-docs
+  namespace: multi-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi-agent-docs
+  template:
+    metadata:
+      labels:
+        app: multi-agent-docs
+    spec:
+      containers:
+        - name: docs
+          image: satish27072002/multi-agent-sdlc-docs:latest
+          ports:
+            - containerPort: 9004
+          env:
+            - name: GROQ_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: multi-agent-secrets
+                  key: GROQ_API_KEY
+            - name: AGENT_NAME
+              value: docs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: multi-agent-docs
+  namespace: multi-agent
+spec:
+  selector:
+    app: multi-agent-docs
+  ports:
+    - name: http
+      port: 9004
+      targetPort: 9004

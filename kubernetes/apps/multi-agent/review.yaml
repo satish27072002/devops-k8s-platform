@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-agent-review
+  namespace: multi-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi-agent-review
+  template:
+    metadata:
+      labels:
+        app: multi-agent-review
+    spec:
+      containers:
+        - name: review
+          image: satish27072002/multi-agent-sdlc-review:latest
+          ports:
+            - containerPort: 9003
+          env:
+            - name: GROQ_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: multi-agent-secrets
+                  key: GROQ_API_KEY
+            - name: AGENT_NAME
+              value: review
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: multi-agent-review
+  namespace: multi-agent
+spec:
+  selector:
+    app: multi-agent-review
+  ports:
+    - name: http
+      port: 9003
+      targetPort: 9003

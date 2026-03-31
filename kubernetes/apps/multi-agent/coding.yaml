@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-agent-coding
+  namespace: multi-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi-agent-coding
+  template:
+    metadata:
+      labels:
+        app: multi-agent-coding
+    spec:
+      containers:
+        - name: coding
+          image: satish27072002/multi-agent-sdlc-coding:latest
+          ports:
+            - containerPort: 9001
+          env:
+            - name: GROQ_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: multi-agent-secrets
+                  key: GROQ_API_KEY
+            - name: AGENT_NAME
+              value: coding
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: multi-agent-coding
+  namespace: multi-agent
+spec:
+  selector:
+    app: multi-agent-coding
+  ports:
+    - name: http
+      port: 9001
+      targetPort: 9001

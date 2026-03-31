@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-agent-gitops
+  namespace: multi-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi-agent-gitops
+  template:
+    metadata:
+      labels:
+        app: multi-agent-gitops
+    spec:
+      containers:
+        - name: gitops
+          image: satish27072002/multi-agent-sdlc-gitops:latest
+          ports:
+            - containerPort: 9005
+          env:
+            - name: GROQ_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: multi-agent-secrets
+                  key: GROQ_API_KEY
+            - name: AGENT_NAME
+              value: gitops
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: multi-agent-gitops
+  namespace: multi-agent
+spec:
+  selector:
+    app: multi-agent-gitops
+  ports:
+    - name: http
+      port: 9005
+      targetPort: 9005

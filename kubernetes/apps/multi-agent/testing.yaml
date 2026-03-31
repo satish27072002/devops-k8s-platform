@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-agent-testing
+  namespace: multi-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi-agent-testing
+  template:
+    metadata:
+      labels:
+        app: multi-agent-testing
+    spec:
+      containers:
+        - name: testing
+          image: satish27072002/multi-agent-sdlc-testing:latest
+          ports:
+            - containerPort: 9002
+          env:
+            - name: GROQ_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: multi-agent-secrets
+                  key: GROQ_API_KEY
+            - name: AGENT_NAME
+              value: testing
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: multi-agent-testing
+  namespace: multi-agent
+spec:
+  selector:
+    app: multi-agent-testing
+  ports:
+    - name: http
+      port: 9002
+      targetPort: 9002

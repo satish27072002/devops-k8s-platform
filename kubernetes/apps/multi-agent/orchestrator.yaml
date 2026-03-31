@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-agent-orchestrator
+  namespace: multi-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi-agent-orchestrator
+  template:
+    metadata:
+      labels:
+        app: multi-agent-orchestrator
+    spec:
+      containers:
+        - name: orchestrator
+          image: satish27072002/multi-agent-sdlc-orchestrator:latest
+          ports:
+            - containerPort: 9000
+          env:
+            - name: GROQ_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: multi-agent-secrets
+                  key: GROQ_API_KEY
+            - name: AGENT_NAME
+              value: orchestrator
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: multi-agent-orchestrator
+  namespace: multi-agent
+spec:
+  selector:
+    app: multi-agent-orchestrator
+  ports:
+    - name: http
+      port: 9000
+      targetPort: 9000
