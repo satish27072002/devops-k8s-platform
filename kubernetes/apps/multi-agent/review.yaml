@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: review
-          image: satish27072002/multi-agent-sdlc-review:amd64-20260331191725
+          image: satish27072002/multi-agent-sdlc-review:bac9292abb87
           ports:
             - containerPort: 9003
           env:
