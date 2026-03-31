@@ -26,6 +26,8 @@ spec:
                   key: GROQ_API_KEY
             - name: AGENT_NAME
               value: orchestrator
+            - name: AGENT_PORT
+              value: "9000"
 ---
 apiVersion: v1
 kind: Service

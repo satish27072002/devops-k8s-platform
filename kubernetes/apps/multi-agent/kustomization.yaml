@@ -11,3 +11,4 @@ resources:
   - review.yaml
   - docs.yaml
   - gitops.yaml
+  - ingress.yaml
