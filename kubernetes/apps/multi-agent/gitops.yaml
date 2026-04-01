@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: gitops
-          image: satish27072002/multi-agent-sdlc-gitops:a3b0d40976b8
+          image: satish27072002/multi-agent-sdlc-gitops:a848ce3a6322
           ports:
             - containerPort: 9005
           env:

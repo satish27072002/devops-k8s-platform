@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: testing
-          image: satish27072002/multi-agent-sdlc-testing:a3b0d40976b8
+          image: satish27072002/multi-agent-sdlc-testing:a848ce3a6322
           ports:
             - containerPort: 9002
           env:
