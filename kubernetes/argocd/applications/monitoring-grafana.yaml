@@ -15,6 +15,94 @@ spec:
           existingSecret: monitoring-grafana-admin
           userKey: admin-user
           passwordKey: admin-password
+        dashboardProviders:
+          dashboardproviders.yaml:
+            apiVersion: 1
+            providers:
+              - name: default
+                orgId: 1
+                folder: AgentOps
+                type: file
+                disableDeletion: false
+                editable: true
+                options:
+                  path: /var/lib/grafana/dashboards/default
+        dashboards:
+          default:
+            agentops-overview:
+              json: |
+                {
+                  "annotations": {"list": []},
+                  "editable": true,
+                  "fiscalYearStartMonth": 0,
+                  "graphTooltip": 0,
+                  "id": null,
+                  "links": [],
+                  "panels": [
+                    {
+                      "datasource": "Prometheus",
+                      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+                      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+                      "id": 1,
+                      "title": "Remote Write Samples/sec",
+                      "type": "timeseries",
+                      "targets": [{"expr": "sum(rate(prometheus_remote_storage_samples_total{job=\"prometheus\"}[5m]))", "refId": "A"}]
+                    },
+                    {
+                      "datasource": "Prometheus",
+                      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+                      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+                      "id": 2,
+                      "title": "Remote Write Failures/sec",
+                      "type": "timeseries",
+                      "targets": [{"expr": "sum(rate(prometheus_remote_storage_samples_failed_total{job=\"prometheus\"}[5m]))", "refId": "A"}]
+                    },
+                    {
+                      "datasource": "Prometheus",
+                      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+                      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+                      "id": 3,
+                      "title": "Remote Write Pending Samples",
+                      "type": "timeseries",
+                      "targets": [{"expr": "max(prometheus_remote_storage_samples_pending{job=\"prometheus\"})", "refId": "A"}]
+                    },
+                    {
+                      "datasource": "Prometheus",
+                      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+                      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+                      "id": 4,
+                      "title": "multi-agent API Availability",
+                      "type": "timeseries",
+                      "targets": [{"expr": "sum(up{namespace=\"multi-agent\",pod=~\"multi-agent-api.*\"})", "refId": "A"}]
+                    },
+                    {
+                      "datasource": "Prometheus",
+                      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+                      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+                      "id": 5,
+                      "title": "Pod Restarts (15m)",
+                      "type": "timeseries",
+                      "targets": [{"expr": "topk(10, sum by (pod) (increase(kube_pod_container_status_restarts_total{namespace=\"multi-agent\"}[15m])))", "refId": "A"}]
+                    },
+                    {
+                      "datasource": "Prometheus",
+                      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+                      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+                      "id": 6,
+                      "title": "Node Ready Count",
+                      "type": "timeseries",
+                      "targets": [{"expr": "sum(kube_node_status_condition{condition=\"Ready\",status=\"true\"})", "refId": "A"}]
+                    }
+                  ],
+                  "schemaVersion": 39,
+                  "style": "dark",
+                  "tags": ["agentops", "sdlc", "production"],
+                  "templating": {"list": []},
+                  "time": {"from": "now-6h", "to": "now"},
+                  "timezone": "",
+                  "title": "AgentOps Overview",
+                  "version": 1
+                }
         persistence:
           enabled: true
           size: 10Gi

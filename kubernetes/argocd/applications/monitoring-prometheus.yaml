@@ -12,10 +12,32 @@ spec:
     helm:
       values: |
         alertmanager:
-          enabled: false
+          enabled: true
+          persistence:
+            enabled: false
+          resources:
+            requests:
+              cpu: 30m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
         kube-state-metrics:
-          enabled: false
+          enabled: true
+          resources:
+            requests:
+              cpu: 30m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
         prometheus-node-exporter:
+          enabled: true
+          resources:
+            requests:
+              cpu: 20m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+        prometheus-pushgateway:
           enabled: false
         server:
           global:
@@ -58,6 +80,51 @@ spec:
               memory: 256Mi
             limits:
               memory: 768Mi
+        serverFiles:
+          alerting_rules.yml:
+            groups:
+              - name: platform-health
+                rules:
+                  - alert: PrometheusRemoteWriteFailures
+                    expr: rate(prometheus_remote_storage_samples_failed_total{job="prometheus"}[5m]) > 0
+                    for: 10m
+                    labels:
+                      severity: warning
+                    annotations:
+                      summary: Prometheus remote write is failing
+                      description: Remote write failures detected for 10m for {{ $labels.url }}.
+                  - alert: PrometheusRemoteWriteBacklogHigh
+                    expr: prometheus_remote_storage_samples_pending{job="prometheus"} > 5000
+                    for: 15m
+                    labels:
+                      severity: warning
+                    annotations:
+                      summary: Prometheus remote write backlog is high
+                      description: Pending remote write samples exceeded 5000 for 15m.
+                  - alert: MultiAgentApiDown
+                    expr: sum(up{namespace="multi-agent",pod=~"multi-agent-api.*"}) < 1
+                    for: 5m
+                    labels:
+                      severity: critical
+                    annotations:
+                      summary: Multi-agent API appears down
+                      description: No healthy API pod target in namespace multi-agent for 5m.
+                  - alert: MultiAgentPodRestartsHigh
+                    expr: sum by (pod) (increase(kube_pod_container_status_restarts_total{namespace="multi-agent"}[15m])) > 3
+                    for: 10m
+                    labels:
+                      severity: warning
+                    annotations:
+                      summary: Pod restart rate is high
+                      description: Pod {{ $labels.pod }} restarted more than 3 times in 15m.
+                  - alert: ClusterNodeNotReady
+                    expr: sum(kube_node_status_condition{condition="Ready",status="true"} == 0) > 0
+                    for: 10m
+                    labels:
+                      severity: critical
+                    annotations:
+                      summary: One or more Kubernetes nodes are NotReady
+                      description: At least one node has been NotReady for 10m.
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring

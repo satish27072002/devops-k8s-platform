@@ -47,7 +47,7 @@ Developer pushes code
 | CI/CD | GitHub Actions |
 | App packaging | Helm charts with configurable values |
 | Infrastructure as Code | Terraform (DigitalOcean provider) |
-| Monitoring | Prometheus + Grafana + kube-state-metrics |
+| Monitoring | Prometheus + Grafana + Grafana Cloud remote write |
 | Containerization | Docker (OrbStack on macOS) |
 | Cluster management | kubectl, k9s, stern, kubectx |
 
@@ -102,9 +102,9 @@ devops-k8s-platform/
 - Sensitive values excluded from version control via .gitignore
 
 **Monitoring and observability**
-- Deployed the kube-prometheus-stack (Prometheus + Grafana + Alertmanager)
-- Pre-configured dashboards for cluster health, pod resources, and network traffic
-- Real-time metrics collection from all pods and nodes
+- Deployed Prometheus and Grafana via dedicated ArgoCD applications
+- Enabled Prometheus remote write to Grafana Cloud for hosted observability
+- Added dashboard-as-code and alert rules for API availability, pod restarts, node readiness, and remote write health
 
 ## How to run this locally
 
@@ -134,15 +134,20 @@ helm repo add argo https://argoproj.github.io/argo-helm
 helm install argocd argo/argo-cd --namespace argocd --wait
 ```
 
-**5. Install monitoring:**
+**5. Install monitoring apps (ArgoCD-managed):**
 ```bash
 kubectl create namespace monitoring
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm install monitoring prometheus-community/kube-prometheus-stack \
-  --namespace monitoring \
-  --set grafana.adminPassword=admin
+kubectl create namespace argocd
+kubectl apply -f kubernetes/argocd/applications/monitoring-prometheus.yaml
+kubectl apply -f kubernetes/argocd/applications/monitoring-grafana.yaml
+
+# create Grafana admin secret expected by chart values
+kubectl create secret generic monitoring-grafana-admin -n monitoring \
+  --from-literal=admin-user=admin \
+  --from-literal=admin-password='change-me-now'
+
 kubectl port-forward service/monitoring-grafana -n monitoring 3000:80
-# Visit http://localhost:3000 (admin / admin)
+# Visit http://localhost:3000
 ```
 
 **6. Clean up:**
