@@ -18,8 +18,40 @@ spec:
         prometheus-node-exporter:
           enabled: false
         server:
+          global:
+            external_labels:
+              cluster: devops-platform
+              environment: production
+          extraFlags:
+            - web.enable-lifecycle
+            - storage.tsdb.wal-compression
           persistentVolume:
-            enabled: false
+            enabled: true
+            size: 20Gi
+          retention: 72h
+          extraSecretMounts:
+            - name: grafana-cloud-remote-write
+              mountPath: /etc/prometheus/secrets/grafana-cloud
+              secretName: monitoring-prometheus-remote-write
+              readOnly: true
+              optional: true
+          remoteWrite:
+            - url: https://prometheus-prod-39-prod-eu-north-0.grafana.net/api/prom/push
+              basic_auth:
+                username_file: /etc/prometheus/secrets/grafana-cloud/username
+                password_file: /etc/prometheus/secrets/grafana-cloud/password
+              queue_config:
+                capacity: 12000
+                min_shards: 1
+                max_shards: 4
+                max_samples_per_send: 2000
+                batch_send_deadline: 5s
+                min_backoff: 100ms
+                max_backoff: 10s
+              write_relabel_configs:
+                - source_labels: [__name__]
+                  regex: "go_.*|process_.*|promhttp_.*"
+                  action: drop
           resources:
             requests:
               cpu: 100m
