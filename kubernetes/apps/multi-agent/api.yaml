@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: satish27072002/multi-agent-sdlc-api:39d42d866c00
+          image: satish27072002/multi-agent-sdlc-api:a3b0d40976b8
           ports:
             - containerPort: 8080
           env:

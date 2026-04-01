@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: coding
-          image: satish27072002/multi-agent-sdlc-coding:39d42d866c00
+          image: satish27072002/multi-agent-sdlc-coding:a3b0d40976b8
           ports:
             - containerPort: 9001
           env:
