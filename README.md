@@ -1,6 +1,6 @@
 # DevOps K8s Platform
 
-A Kubernetes-native CI/CD platform with GitOps automation, Infrastructure as Code, and full observability. Built as production infrastructure for deploying and monitoring microservices — currently serving as the deployment platform for a [Multi-Agent SDLC System](https://github.com/satish27072002/multi-agent-sdlc) (in development).
+A Kubernetes-native CI/CD platform with GitOps automation, Infrastructure as Code, and full observability. Built as production infrastructure for deploying and monitoring microservices — currently serving as the deployment platform for a [Multi-Agent SDLC System](https://github.com/satish27072002/multi-agent-sdlc).
 
 ## What this project does
 
@@ -181,7 +181,7 @@ This was my first Kubernetes project. Key takeaways:
 
 This platform is the infrastructure layer for:
 
-- **[Multi-Agent SDLC System](https://github.com/satish27072002/multi-agent-sdlc)** (in development) — A multi-agent AI system that automates the software development lifecycle using MCP and A2A protocols. Each agent (coding, review, gitops) runs as an independent microservice on this Kubernetes platform.
+- **[Multi-Agent SDLC System](https://github.com/satish27072002/multi-agent-sdlc)** — A multi-agent AI system that automates the software development lifecycle using MCP and A2A protocols. Each agent (coding, review, gitops) runs as an independent microservice on this Kubernetes platform.
 
 ## Author
 
