@@ -16,6 +16,53 @@ Developer pushes code
             → Grafana displays health dashboards
 ```
 
+## New laptop quickstart
+
+If the production cluster already exists, you can connect from any new laptop in a few minutes.
+
+**1. Install tools**
+
+```bash
+# macOS
+brew install git kubectl doctl
+```
+
+**2. Authenticate and load kubeconfig**
+
+```bash
+export DIGITALOCEAN_ACCESS_TOKEN="<your_do_token>"
+doctl auth init --access-token "$DIGITALOCEAN_ACCESS_TOKEN"
+doctl kubernetes cluster kubeconfig save 24c3900b-a1cf-455d-aba5-ccb991649468
+```
+
+**3. Verify access**
+
+```bash
+kubectl get nodes
+kubectl get applications -n argocd
+kubectl get pods -n monitoring
+```
+
+You should see `monitoring-prometheus` and `monitoring-grafana` in `Synced/Healthy` state.
+
+**4. Open Grafana**
+
+```bash
+kubectl port-forward service/monitoring-grafana -n monitoring 3000:80
+```
+
+Open `http://localhost:3000` and use your existing Grafana admin credentials.
+
+**5. Verify Prometheus remote write (optional)**
+
+```bash
+kubectl port-forward service/monitoring-prometheus-server -n monitoring 19090:80
+curl -G --data-urlencode 'query=sum(increase(prometheus_remote_storage_samples_total[5m]))' \
+  http://127.0.0.1:19090/api/v1/query
+curl -G --data-urlencode 'query=sum(increase(prometheus_remote_storage_samples_failed_total[5m]))' \
+  http://127.0.0.1:19090/api/v1/query
+```
+
 ## Architecture
 
 ```
