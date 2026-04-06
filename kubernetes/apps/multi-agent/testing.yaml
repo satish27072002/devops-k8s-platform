@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: testing
-          image: satish27072002/multi-agent-sdlc-testing:64e813221550
+          image: satish27072002/multi-agent-sdlc-testing:ef7b34142c5a
           command:
             - python
             - -m

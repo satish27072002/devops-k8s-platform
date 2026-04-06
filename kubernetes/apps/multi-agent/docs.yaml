@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: docs
-          image: satish27072002/multi-agent-sdlc-docs:64e813221550
+          image: satish27072002/multi-agent-sdlc-docs:ef7b34142c5a
           command:
             - python
             - -m

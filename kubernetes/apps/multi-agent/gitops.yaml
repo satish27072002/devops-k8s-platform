@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: gitops
-          image: satish27072002/multi-agent-sdlc-gitops:64e813221550
+          image: satish27072002/multi-agent-sdlc-gitops:ef7b34142c5a
           command:
             - python
             - -m

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: review
-          image: satish27072002/multi-agent-sdlc-review:64e813221550
+          image: satish27072002/multi-agent-sdlc-review:ef7b34142c5a
           command:
             - python
             - -m

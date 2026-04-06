@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: orchestrator
-          image: satish27072002/multi-agent-sdlc-orchestrator:64e813221550
+          image: satish27072002/multi-agent-sdlc-orchestrator:ef7b34142c5a
           command:
             - uvicorn
             - src.server.agent_health:app
