@@ -16,6 +16,10 @@ spec:
       containers:
         - name: gitops
           image: satish27072002/multi-agent-sdlc-gitops:64e813221550
+          command:
+            - python
+            - -m
+            - src.server.agent_runner
           ports:
             - containerPort: 9005
           env:
@@ -28,6 +32,18 @@ spec:
               value: gitops
             - name: AGENT_PORT
               value: "9005"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9005
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9005
+            initialDelaySeconds: 15
+            periodSeconds: 30
 ---
 apiVersion: v1
 kind: Service

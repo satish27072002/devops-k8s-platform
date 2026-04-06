@@ -16,6 +16,10 @@ spec:
       containers:
         - name: docs
           image: satish27072002/multi-agent-sdlc-docs:64e813221550
+          command:
+            - python
+            - -m
+            - src.server.agent_runner
           ports:
             - containerPort: 9004
           env:
@@ -28,6 +32,18 @@ spec:
               value: docs
             - name: AGENT_PORT
               value: "9004"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9004
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9004
+            initialDelaySeconds: 15
+            periodSeconds: 30
 ---
 apiVersion: v1
 kind: Service
